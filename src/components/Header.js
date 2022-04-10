@@ -9,7 +9,6 @@ import {
   makeStyles,
   createTheme,
   ThemeProvider,
-  FormControl,
 } from "@material-ui/core";
 import { useHistory } from "react-router-dom"; //move a function from this file
 import { CryptoState } from "../CryptoContext";
@@ -64,7 +63,6 @@ const Header = () => {
           >
             TRACKER
           </Typography>
-          <FormControl>
             <Select
               variant="outlined"
               labelId="demo-simple-select-label"
@@ -77,9 +75,7 @@ const Header = () => {
               <MenuItem value={"myr"}>RM</MenuItem>
               <MenuItem value={"jpy"}>JPY</MenuItem>
             </Select>
-
-
-          </FormControl>
+            <AuthModal/>
         </Toolbar>
         </Container>
       </AppBar>

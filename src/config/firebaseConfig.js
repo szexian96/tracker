@@ -1,4 +1,4 @@
-const firebaseConfig = {
+const firebaseConfig = {//completely copy all of this
   apiKey: "AIzaSyDcUJK1jsLSwCVDfGdltm6vdBynrOmxWcs",
   authDomain: "tracker-13885.firebaseapp.com",
   projectId: "tracker-13885",

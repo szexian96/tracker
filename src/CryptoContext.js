@@ -12,7 +12,7 @@ const CryptoContext = ({children}) => {
   const [symbol, setSymbol] = useState("$"); //second if USD then $
   const [coins, setCoins] = useState([]); //setCoins z
   const [loading, setLoading] = useState(false); //for table loading
-  const [user, setUser] = useState(null); // for user
+  const [user, setUser] = useState(null); // for user initial value is null
 
   const fetchCoins = async () => {
     // and async

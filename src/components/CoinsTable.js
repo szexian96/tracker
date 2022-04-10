@@ -1,6 +1,5 @@
 import React from "react";
 import { useState } from "react";
-import { useEffect } from "react";
 import { CryptoState } from "../CryptoContext";
 import {
   Container,
@@ -30,7 +29,7 @@ const CoinsTable = () => {
   const [page, setPage] = useState(1); //initial value
   const history = useHistory();
 
-  const { currency,symbol,coins,loading } = CryptoState(); //for currency state
+  const { symbol,coins,loading } = CryptoState(); //for currency state
 
   const darkTheme = createTheme({
     //dark theme provider
