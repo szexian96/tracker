@@ -2,8 +2,6 @@ import React from "react";
 import { useState } from "react";
 import { useEffect } from "react";
 import { CryptoState } from "../CryptoContext";
-import { CoinList } from "../config/api";
-import axios from "axios";
 import {
   Container,
   createTheme,
@@ -28,22 +26,11 @@ export function numberWithCommas(x) {
   }
 
 const CoinsTable = () => {
-  const [coins, setCoins] = useState([]); //setCoins z
-  const [loading, setLoading] = useState(false); //for table loading
   const [search, setSearch] = useState("");
   const [page, setPage] = useState(1); //initial value
   const history = useHistory();
 
-  const { currency,symbol } = CryptoState(); //for currency state
-
-  const fetchCoins = async () => {
-    // and async
-    setLoading(true);
-    const { data } = await axios.get(CoinList(currency)); //use api and destructuring { data } and get the currnectno need to write data.data
-
-    setCoins(data); //data receive from api
-    setLoading(false);
-  };
+  const { currency,symbol,coins,loading } = CryptoState(); //for currency state
 
   const darkTheme = createTheme({
     //dark theme provider
@@ -54,10 +41,6 @@ const CoinsTable = () => {
       type: "dark",
     },
   });
-
-  useEffect(() => {
-    fetchCoins(); //everytime got changes then fetchCoins
-  }, [currency]);
 
   //function for Searching in
   const handleSearch = () => {
