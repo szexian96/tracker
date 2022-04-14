@@ -45,7 +45,7 @@ const CryptoContext = ({ children }) => {
   );
 }; //return currency,symbol and set Currency to header
 
-export default CryptoContext; //return to index,js
+export default CryptoContext; //return to index.js
 
 export const CryptoState = () => {
   // return to header.js

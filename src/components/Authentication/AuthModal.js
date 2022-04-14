@@ -22,6 +22,10 @@ const useStyles = makeStyles((theme) => ({
     width: 400,
     color: 'white',
     borderRadius: 10,
+
+  },
+  indicator: {
+    backgroundColor: "black"
   },
 }));
 
@@ -64,8 +68,8 @@ export default function AuthModal() {
         className={classes.modal}
         open={open}
         onClose={handleClose}
-        closeAfterTransition
-        BackdropComponent={Backdrop}
+        closeAfterTransition 
+        BackdropComponent={Backdrop} //when click backdrop
         BackdropProps={{
           timeout: 500,
         }}
@@ -79,11 +83,12 @@ export default function AuthModal() {
                 color: "white",
               }}
             >
-              <Tabs
+              <Tabs 
                 value={value}
                 onChange={handleChange}
                 variant="fullWidth"
                 style={{ borderRadius: 10 }}
+                inkBarStyle={{background: 'blue'}}
               >
                 <Tab label="Login" />
                 <Tab label="Sign Up" />
