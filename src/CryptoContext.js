@@ -1,4 +1,4 @@
-import React, {  createContext, useContext, useState } from "react";
+import React, { createContext, useContext, useState } from "react";
 import { CoinList } from "./config/api";
 import axios from "axios";
 import { useEffect } from "react";
@@ -7,12 +7,17 @@ import { useEffect } from "react";
 //a context is a a state that use for all the project
 const Crypto = createContext();
 
-const CryptoContext = ({children}) => {
+const CryptoContext = ({ children }) => {
   const [currency, setCurrency] = useState("usd"); //this is use state which initial value
   const [symbol, setSymbol] = useState("$"); //second if USD then $
   const [coins, setCoins] = useState([]); //setCoins z
   const [loading, setLoading] = useState(false); //for table loading
   const [user, setUser] = useState(null); // for user initial value is null
+  const [alert, setAlert] = useState({
+    open: false,
+    message: "",
+    type: "success",
+  });
 
   const fetchCoins = async () => {
     // and async
@@ -31,11 +36,18 @@ const CryptoContext = ({children}) => {
     fetchCoins();
   }, [currency]); //when the variable in [] change, it will run
 
-  return <Crypto.Provider value={{currency,symbol,setCurrency, coins, loading}}>{children}</Crypto.Provider>;
-};//return currency,symbol and set Currency to header
+  return (
+    <Crypto.Provider
+      value={{ currency, symbol, setCurrency, coins, loading, alert, setAlert }}
+    >
+      {children}
+    </Crypto.Provider>
+  );
+}; //return currency,symbol and set Currency to header
 
 export default CryptoContext; //return to index,js
 
-export const CryptoState = () => { // return to header.js
-  return useContext(Crypto);//use this context which is a variable called Crypto
+export const CryptoState = () => {
+  // return to header.js
+  return useContext(Crypto); //use this context which is a variable called Crypto
 };
