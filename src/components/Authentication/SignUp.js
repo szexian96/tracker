@@ -1,15 +1,51 @@
 import React from "react";
 import { useState } from "react";
 import { Box, Button, TextField } from "@material-ui/core";
+import { CryptoState } from "../../CryptoContext";
+import { auth } from "../../firebase";
+import { createUserWithEmailAndPassword } from "firebase/auth";
 
 const SignUp = ({ handleClose }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
 
-  const handleSubmit = () => { //if the comfirm password not same with password
-    if (password!==confirmPassword){
-      
+  const { setAlert } = CryptoState();
+
+  const handleSubmit = async () => {
+    //if the comfirm password not same with password
+    if (password !== confirmPassword) {
+      setAlert({
+        open: true,
+        message: "Password does not match",
+        type: "error",
+      });
+      return;
+    }
+
+    try {
+      const result = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+
+      console.log(result);
+      handleClose();
+
+      setAlert({
+        open: true,
+        message: `Sign Up Successful. Welcome ${result.user.email}`,
+        type: "success",
+      });
+    } catch (error) {
+
+      setAlert({
+        open: true,
+        message: error.message,
+        type: "error",
+      });
+      return;
     }
   };
 
@@ -45,7 +81,7 @@ const SignUp = ({ handleClose }) => {
       <Button
         variant="contained"
         size="large"
-        style ={{backgroundColor: "#66fcf1"}}
+        style={{ backgroundColor: "#66fcf1" }}
         onClick={handleSubmit} //a handleSubmit Button
       >
         SIGN UP

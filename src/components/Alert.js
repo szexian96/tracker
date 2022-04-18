@@ -16,12 +16,21 @@ const Alert = () => {
     setAlert({ open: false });
   };
   return (
+    //show the error bar
     <Snackbar
       open={alert.open} 
       autoHideDuration={6000}
       onClose={handleClose}
     >
-        <MuiAlert></MuiAlert>
+        {/*show the alert message*/}
+        <MuiAlert
+        onClose = {handleClose} // callback when the component requests to closed
+        elevation={10}//shadow like behind
+        variant="filled"
+        severity={alert.type}
+        >
+          {alert.message}
+        </MuiAlert>
     </Snackbar>
   );
 };

@@ -88,7 +88,9 @@ export default function AuthModal() {
                 onChange={handleChange}
                 variant="fullWidth"
                 style={{ borderRadius: 10 }}
-                inkBarStyle={{background: 'blue'}}
+                TabIndicatorProps={{
+           style: { background: "#66fcf1"}
+         }}
               >
                 <Tab label="Login" />
                 <Tab label="Sign Up" />
