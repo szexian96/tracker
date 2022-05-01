@@ -19,7 +19,7 @@ import AuthModal from "./Authentication/AuthModal";
 const useStyles = makeStyles(() => ({
   title: {
     flex: 1,
-    color:c "#66fcf1",
+    color:"#66fcf1",
     fontFamily: "Roboto",
     fontWeight: "bold",
     cursor: "pointer",
