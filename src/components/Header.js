@@ -19,7 +19,7 @@ import AuthModal from "./Authentication/AuthModal";
 const useStyles = makeStyles(() => ({
   title: {
     flex: 1,
-    color: "#66fcf1",
+    color:c "#66fcf1",
     fontFamily: "Roboto",
     fontWeight: "bold",
     cursor: "pointer",
@@ -31,7 +31,6 @@ const Header = () => {
   const classes = useStyles(); //use the style in this function classes as useStyles Function
 
   const history = useHistory(); //for Routing
-
   const { currency, setCurrency } = CryptoState();
 
   const darkTheme = createTheme({
