@@ -4,6 +4,7 @@ import axios from "axios";
 import { useEffect } from "react";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth, db } from "./firebase";
+import { doc, onSnapshot } from "firebase/firestore";
 //for React app to effectively produce global variables that can be passed around.
 //context provide a way to share values like these between components
 //a context is a a state that use for all the project
@@ -21,12 +22,33 @@ const CryptoContext = ({ children }) => {
     message: "",
     type: "success",
   });
+  const [watchlist, setWatchlist] = useState([]);
+  //change the add to watchlist button
+  useEffect(() => {
+    if (user) {
+      const coinRef = doc(db, "watchlist", user.uid);
+
+      var unsubscribe = onSnapshot(coinRef, (coin) => {
+        if (coin.exists()) {
+          console.log(coin.data().coins); //check whether is inside watchlist
+          setWatchlist(coin.data().coins);
+        } else {
+          console.log("No Items in Watchlist");
+        }
+      });
+      return () => {
+        unsubscribe();
+      };
+    }
+  }, [user]);
 
   //change the login button
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
       if (user) setUser(user);
       else setUser(null);
+
+      console.log(user);
     });
   }, []);
 
@@ -49,7 +71,17 @@ const CryptoContext = ({ children }) => {
 
   return (
     <Crypto.Provider
-      value={{ currency, symbol, setCurrency, coins, loading, alert, setAlert,user }}
+      value={{
+        currency,
+        symbol,
+        setCurrency,
+        coins,
+        loading,
+        alert,
+        setAlert,
+        user,
+        watchlist,
+      }}
     >
       {children}
     </Crypto.Provider>

@@ -1,4 +1,9 @@
-import { LinearProgress, makeStyles, Typography } from "@material-ui/core";
+import {
+  Button,
+  LinearProgress,
+  makeStyles,
+  Typography,
+} from "@material-ui/core";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
@@ -6,12 +11,14 @@ import CoinInfo from "../components/CoinInfo";
 import { SingleCoin } from "../config/api";
 import { numberWithCommas } from "../components/CoinsTable";
 import { CryptoState } from "../CryptoContext";
+import { doc, setDoc } from "firebase/firestore";
+import { db } from "../firebase";
 
 const CoinPage = () => {
   const { id } = useParams();
   const [coin, setCoin] = useState();
 
-  const { currency, symbol } = CryptoState();
+  const { currency, symbol, user, watchlist, setAlert } = CryptoState();
 
   const fetchCoin = async () => {
     const { data } = await axios.get(SingleCoin(id));
@@ -26,7 +33,8 @@ const CoinPage = () => {
   const useStyles = makeStyles((theme) => ({
     container: {
       display: "flex",
-      [theme.breakpoints.down("md")]: { //for mobile phone
+      [theme.breakpoints.down("md")]: {
+        //for mobile phone
         flexDirection: "column",
         alignItems: "center",
       },
@@ -60,19 +68,75 @@ const CoinPage = () => {
       padding: 25,
       paddingTop: 10,
       width: "100%",
-      [theme.breakpoints.down("md")]: { //medium
-        display: "flex",
-        justifyContent: "space-around",
+      [theme.breakpoints.down("md")]: {
+        //medium
+        display: "column",
+        justifyContent: "center",
       },
-      [theme.breakpoints.down("sm")]: { //small
+      [theme.breakpoints.down("sm")]: {
+        //small
+        display: "flex",
         flexDirection: "column",
         alignItems: "center",
       },
-      [theme.breakpoints.down("xs")]: { //extra small
+      [theme.breakpoints.down("xs")]: {
+        //extra small
         alignItems: "start",
-      },
+      }, 
     },
   }));
+
+  const inWatchlist = watchlist.includes(coin?.id);
+
+  const addToWatchlist = async () => {
+    // add watch list
+    const coinRef = doc(db, "watchlist", user.uid);
+
+    try {
+      await setDoc(coinRef, {
+        coins: watchlist ? [...watchlist, coin?.id] : [coin?.id],
+      });
+
+      setAlert({
+        open: true,
+        message: `${coin.name} Added to the Watchlist !`,
+        type: "success",
+      })
+    } catch (error) {
+      setAlert({
+        open : true,
+        message: error.message,
+        type: "error",
+      });
+    }
+  };
+
+  const removeFromWatchlist = async() => {
+    const coinRef = doc(db,"watchlist",user.uid);
+
+    try {
+      await setDoc(
+        coinRef,
+        {
+        coins : watchlist.filter((watch) => watch !== coin?.id), 
+        },
+        {merge: "true"}
+      );
+
+      setAlert({
+        open: true,
+        message: `${coin.name} Removed from the Watchlist !`,
+        type: "success",
+      });
+    } catch (error) {
+      setAlert({
+        open: true,
+        message: error.message,
+        type : "error",
+      });
+    }
+
+  };
 
   const classes = useStyles();
 
@@ -91,7 +155,7 @@ const CoinPage = () => {
           {coin?.name}
         </Typography>
         <Typography variant="subtitle1" className={classes.description}>
-          {(coin?.description.en.split(". ")[0])}.
+          {coin?.description.en.split(". ")[0]}.
         </Typography>
         <div className={classes.marketData}>
           <span style={{ display: "flex" }}>
@@ -140,12 +204,27 @@ const CoinPage = () => {
               {symbol}{" "}
               {numberWithCommas(
                 coin?.market_data.market_cap[currency.toLowerCase()]
-                  .toString() 
+                  .toString()
                   .slice(0, -6)
               )}
               M
             </Typography>
           </span>
+
+          {user && (
+            <Button
+              variant="outlined"
+              style={{
+                width: "100%",
+                height: 40,
+                backgroundColor: inWatchlist ? "#ff0000":"#66fcf1",
+                color: inWatchlist ? "white":"black"
+              }}
+              onClick={inWatchlist? removeFromWatchlist : addToWatchlist}
+            >
+              {inWatchlist? "Remove from Watchlist":"Add to Watchlist"}
+            </Button>
+          )}
         </div>
       </div>
       <CoinInfo coin={coin} />
