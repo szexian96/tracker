@@ -2,6 +2,8 @@ import React, { createContext, useContext, useState } from "react";
 import { CoinList } from "./config/api";
 import axios from "axios";
 import { useEffect } from "react";
+import { onAuthStateChanged } from "firebase/auth";
+import { auth, db } from "./firebase";
 //for React app to effectively produce global variables that can be passed around.
 //context provide a way to share values like these between components
 //a context is a a state that use for all the project
@@ -14,10 +16,19 @@ const CryptoContext = ({ children }) => {
   const [loading, setLoading] = useState(false); //for table loading
   const [user, setUser] = useState(null); // for user initial value is null
   const [alert, setAlert] = useState({
+    //message for alert
     open: false,
     message: "",
     type: "success",
   });
+
+  //change the login button
+  useEffect(() => {
+    onAuthStateChanged(auth, (user) => {
+      if (user) setUser(user);
+      else setUser(null);
+    });
+  }, []);
 
   const fetchCoins = async () => {
     // and async
@@ -38,7 +49,7 @@ const CryptoContext = ({ children }) => {
 
   return (
     <Crypto.Provider
-      value={{ currency, symbol, setCurrency, coins, loading, alert, setAlert }}
+      value={{ currency, symbol, setCurrency, coins, loading, alert, setAlert,user }}
     >
       {children}
     </Crypto.Provider>
